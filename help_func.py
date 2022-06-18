@@ -4,7 +4,8 @@ import os
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('argument', help='Required argument')
+    parser.add_argument('argument', nargs='?', default=0,
+                        help='Required argument')
     parser.add_argument('number', nargs='?', const=14400, 
                         help='Required number')
     return parser
