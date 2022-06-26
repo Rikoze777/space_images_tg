@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 
 
 def apod_nasa_num(img_num, token):
-    counter = 1
     nasa_url = "https://api.nasa.gov/planetary/apod"
     way = "images/apod/"
     os.makedirs(way, exist_ok=True)
@@ -18,10 +17,10 @@ def apod_nasa_num(img_num, token):
     response = requests.get(nasa_url, params=param)
     response.raise_for_status()
     nasa_items = response.json()
-    for item in nasa_items:
+    for count,item in nasa_items:
         url = item['url']
         extension = (''.join(url.split(".")[-1:]))
-        filename = "apod_{}.{}".format(counter, extension)
+        filename = "apod_{}.{}".format(count, extension)
         write_way = os.path.join(way, filename)
         try:
             urlretrieve(url, write_way)
@@ -29,7 +28,7 @@ def apod_nasa_num(img_num, token):
             print("something wrong with local path")
         except HTTPError:
             print("something wrong with url")
-        counter += 1
+
 
 
 def main():
