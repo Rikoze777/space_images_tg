@@ -7,7 +7,6 @@ import re
 
 
 def get_epic_img(token):
-    counter = 1
     epic_url = "https://api.nasa.gov/EPIC/api/natural/images"
     way = "images/epic/"
     os.makedirs(way, exist_ok=True)
@@ -17,7 +16,7 @@ def get_epic_img(token):
     response = requests.get(epic_url, params=param)
     response.raise_for_status()
     epic_items = response.json()
-    for item in epic_items:
+    for count,item in enumerate(epic_items):
         base_url = "https://api.nasa.gov/EPIC/archive/natural"
         split_date = [int(x) for x in re.findall('(\d+)', item['date'])]
         edit_day = "{:02d}".format(split_date[1])
@@ -25,7 +24,7 @@ def get_epic_img(token):
         img = item['image']
         img_time = f"{split_date[0]}/{edit_day}/{edit_month}"
         url = f"{base_url}/{img_time}/png/{img}.png?api_key={token}"
-        filename = "epic_{}.jpeg".format(counter)
+        filename = "epic_{}.jpeg".format(count)
         write_way = os.path.join(way, filename)
         try:
             urlretrieve(url, write_way)
@@ -33,7 +32,7 @@ def get_epic_img(token):
             print("something wrong with local path")
         except HTTPError:
             print("something wrong with url")
-        counter += 1
+
 
 
 def main():
