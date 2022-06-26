@@ -2,7 +2,7 @@ import requests
 import os
 from urllib.error import HTTPError
 from urllib.request import urlretrieve
-from help_func import create_parser
+import argparse
 
 
 def fetch_spacex_launch(id_token):
@@ -31,7 +31,9 @@ def fetch_spacex_launch(id_token):
 
 
 def main():
-    parser = create_parser()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('argument',
+                        help='Required argument')
     id_arg = parser.parse_args()
     id_launch = id_arg.argument
     fetch_spacex_launch(id_launch)
@@ -39,4 +41,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
     
