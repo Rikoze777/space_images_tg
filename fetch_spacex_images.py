@@ -34,12 +34,11 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('argument',
                         help='Required argument')
-    id_arg = parser.parse_args()
-    id_launch = id_arg.argument
-    fetch_spacex_launch(id_launch)
+    args = parser.parse_args()
+    launch_id = args.argument
+    fetch_spacex_launch(launch_id)
 
 
 if __name__ == '__main__':
     main()
-    
     
