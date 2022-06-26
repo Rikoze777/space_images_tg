@@ -2,7 +2,7 @@ import requests
 import os
 from urllib.error import HTTPError
 from urllib.request import urlretrieve
-from help_func import create_parser
+import argparse
 from dotenv import load_dotenv
 
 
@@ -35,9 +35,11 @@ def apod_nasa_num(img_num, token):
 def main():
     load_dotenv()
     nasa_token = os.environ.get("NASA_TOKEN")
-    parser = create_parser()
-    id_arg = parser.parse_args()
-    img_num = id_arg.argument
+    parser = argparse.ArgumentParser()
+    parser.add_argument('amount',
+                        help='Required argument')
+    args = parser.parse_args()
+    img_num = args.amount
     apod_nasa_num(img_num, nasa_token)
 
 
