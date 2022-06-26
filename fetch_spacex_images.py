@@ -17,9 +17,8 @@ def fetch_spacex_launch(id_token):
     spacex_items = response.json()
     for item in spacex_items:
         urls = item['links']['flickr_images']
-        counter = 1
-        for url in urls:
-            filename = "spacex_{}.jpeg".format(counter)
+        for count, url in enumerate(urls):
+            filename = "spacex_{}.jpeg".format(count)
             write_way = os.path.join(way, filename)
             try:
                 urlretrieve(url, write_way)
@@ -27,7 +26,7 @@ def fetch_spacex_launch(id_token):
                 print("something wrong with local path")
             except HTTPError:
                 print("something wrong with url")
-            counter += 1
+
 
 
 def main():
