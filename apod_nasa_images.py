@@ -17,7 +17,7 @@ def apod_nasa_num(img_num, token):
     response = requests.get(nasa_url, params=param)
     response.raise_for_status()
     nasa_items = response.json()
-    for count,item in nasa_items:
+    for count,item in enumerate(nasa_items):
         url = item['url']
         extension = (''.join(url.split(".")[-1:]))
         filename = "apod_{}.{}".format(count, extension)
