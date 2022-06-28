@@ -1,34 +1,35 @@
 import requests
 import os
 from urllib.error import HTTPError
-from urllib.request import urlretrieve
 import argparse
 from dotenv import load_dotenv
 
 
-def apod_nasa_num(img_num, token):
+def apod_nasa_num(num, token):
     nasa_url = "https://api.nasa.gov/planetary/apod"
-    way = "images/apod/"
-    os.makedirs(way, exist_ok=True)
+    path = "images/apod/"
+    os.makedirs(path, exist_ok=True)
     param = {
         "api_key": token,
-        "count": img_num,
+        "count": num,
     }
     response = requests.get(nasa_url, params=param)
     response.raise_for_status()
     nasa_items = response.json()
     for count,item in enumerate(nasa_items):
         url = item['url']
-        extension = (''.join(url.split(".")[-1:]))
-        filename = "apod_{}.{}".format(count, extension)
-        write_way = os.path.join(way, filename)
+        file_ext = os.path.splitext(url)
+        response_img = requests.get(url)
+        response_img.raise_for_status()
+        filename = "apod_{}{}".format(count, file_ext[1])
+        path_file = os.path.join(path, filename)
         try:
-            urlretrieve(url, write_way)
+            with open(path_file, 'wb') as img_file:
+                img_file.write(response_img.content)
         except FileNotFoundError:
             print("something wrong with local path")
         except HTTPError:
             print("something wrong with url")
-
 
 
 def main():
@@ -38,8 +39,8 @@ def main():
     parser.add_argument('amount',
                         help='Required argument')
     args = parser.parse_args()
-    img_num = args.amount
-    apod_nasa_num(img_num, nasa_token)
+    amount = args.amount
+    apod_nasa_num(amount, nasa_token)
 
 
 if __name__ == '__main__':
