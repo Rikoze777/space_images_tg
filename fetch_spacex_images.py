@@ -7,8 +7,8 @@ import argparse
 
 def fetch_spacex_launch(id_token):
     spacex_url = "https://api.spacexdata.com/v3/launches"
-    way = "images/spacex/"
-    os.makedirs(way, exist_ok=True)
+    path = "images/spacex/"
+    os.makedirs(path, exist_ok=True)
     param = {
         "flight_id": id_token
     }
@@ -18,8 +18,9 @@ def fetch_spacex_launch(id_token):
     for item in spacex_items:
         urls = item['links']['flickr_images']
         for count, url in enumerate(urls):
-            filename = "spacex_{}.jpeg".format(count)
-            write_way = os.path.join(way, filename)
+            file_ext = os.path.splitext(url)
+            filename = "spacex_{}{}".format(count, file_ext[1])
+            write_way = os.path.join(path, filename)
             try:
                 urlretrieve(url, write_way)
             except FileNotFoundError:
