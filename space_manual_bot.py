@@ -1,34 +1,35 @@
-from email.policy import default
 import os
 import telegram
 import argparse
-from help_func import get_img
 from dotenv import load_dotenv
 import random
 
 
 def main():
     load_dotenv()
+    chat_id = os.environ.get('CHAT_ID')
     tg_token = os.environ.get("TG_TOKEN")
     bot = telegram.Bot(token=tg_token)
     parser = argparse.ArgumentParser()
-    parser.add_argument('folder', nargs='?',
+    parser.add_argument('image', nargs='?',
                         help='Required folder path')
     folder_arg = parser.parse_args()
-    path = folder_arg.folder
-    if path:
-        folder = "images/{}".format(path)
-        bot.send_document(chat_id=-1001381382770, document=open(folder, 'rb'))
+    img = folder_arg.image
+    if img:
+        for root, dirs, files in os.walk("images/"):
+            for file in files:
+                if file==img:
+                    img_root = os.path.join(root, file)
+        bot.send_document(chat_id=chat_id, document=open(img_root, 'rb'))
     else:
-        full_pack = []
-        full_pack += get_img("epic")
-        full_pack += get_img("apod")
-        full_pack += get_img("spacex")
-        folder_img = random.choice(os.listdir("images"))
-        img = random.choice([x for x in os.listdir("images/{}".format(folder_img)) 
-                            if os.path.isfile(os.path.join("images/{}".format(folder_img), x))])
-        img_path = f"images/{folder_img}/{img}"
-        bot.send_document(chat_id=-1001381382770, document=open(img_path, 'rb'))
+        img_list = []
+        for root, dirs, files in os.walk("images/"):
+            for file in files:
+                img_root = os.path.join(root, file)
+                img_list.append(img_root)
+        img_path = random.choice(img_list)
+        bot.send_document(chat_id=chat_id, document=open(img_path, 'rb'))
+
 
 if __name__ == "__main__":
     main()
