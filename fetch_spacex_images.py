@@ -20,14 +20,11 @@ def fetch_spacex_launch(id_token):
         for count, url in enumerate(urls):
             file_ext = os.path.splitext(url)
             filename = "spacex_{}{}".format(count, file_ext[1])
-            write_way = os.path.join(path, filename)
-            try:
-                urlretrieve(url, write_way)
-            except FileNotFoundError:
-                print("something wrong with local path")
-            except HTTPError:
-                print("something wrong with url")
-
+            response_img = requests.get(url)
+            response_img.raise_for_status()
+            path_file = os.path.join(path, filename)
+            with open(path_file, 'wb') as img_file:
+                img_file.write(response_img.content)
 
 
 def main():
