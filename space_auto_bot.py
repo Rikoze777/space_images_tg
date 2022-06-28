@@ -1,8 +1,6 @@
 import os
-from re import T
 import telegram
 import argparse
-from help_func import get_img
 from dotenv import load_dotenv
 import time
 import random
@@ -31,7 +29,8 @@ def main():
     args = parser.parse_args()
     folder = args.folder
     num = args.number
-    img_list = get_img(folder)
+    path = f"images/{folder}"
+    img_list = os.listdir(path)
     publish(folder, img_list, num, bot, chat_id)
 
 
