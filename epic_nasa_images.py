@@ -1,15 +1,14 @@
 import requests
 import os
 from urllib.error import HTTPError
-from urllib.request import urlretrieve
 from dotenv import load_dotenv
-import re
+from datetime import datetime
 
 
 def get_epic_img(token):
     epic_url = "https://api.nasa.gov/EPIC/api/natural/images"
-    way = "images/epic/"
-    os.makedirs(way, exist_ok=True)
+    path = "images/epic/"
+    os.makedirs(path, exist_ok=True)
     param = {
         "api_key": token
     }
@@ -18,16 +17,18 @@ def get_epic_img(token):
     epic_items = response.json()
     for count,item in enumerate(epic_items):
         base_url = "https://api.nasa.gov/EPIC/archive/natural"
-        split_date = [int(x) for x in re.findall('(\d+)', item['date'])]
-        edit_day = "{:02d}".format(split_date[1])
-        edit_month = "{:02d}".format(split_date[2])
+        date_time = datetime.fromisoformat(item['date']).strftime('%Y/%m/%d')
+        date_time = date_time.split('/')
         img = item['image']
-        img_time = f"{split_date[0]}/{edit_day}/{edit_month}"
+        img_time = f"{date_time[0]}/{date_time[1]}/{date_time[2]}"
         url = f"{base_url}/{img_time}/png/{img}.png?api_key={token}"
-        filename = "epic_{}.jpeg".format(count)
-        write_way = os.path.join(way, filename)
+        response_img = requests.get(url)
+        response_img.raise_for_status()
+        filename = "epic_{}.png".format(count)
+        path_file = os.path.join(path, filename)
         try:
-            urlretrieve(url, write_way)
+            with open(path_file, 'wb') as img_file:
+                img_file.write(response_img.content)
         except FileNotFoundError:
             print("something wrong with local path")
         except HTTPError:
