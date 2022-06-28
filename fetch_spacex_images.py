@@ -1,7 +1,5 @@
 import requests
 import os
-from urllib.error import HTTPError
-from urllib.request import urlretrieve
 import argparse
 
 
