@@ -23,6 +23,12 @@ CHAT_ID="ID вашего чата в телеграм"
 ```bash
 TG_TOKEN="Ваш токен"
 ```
+8. Добавьте пути сохранения картинок в `.env` для скриптов: `fletch_spacex_images.py`, `apod_nasa_images.py`, `epic_nasa_images.py`
+```bash
+SPACEX_PATH="Путь к папке для spacex"
+APOD_PATH="Путь к папке для apod"
+EPIC_PATH="Путь к папке для epic"
+```
 Python3 должен быть уже установлен. 
 Затем используйте `pip` (или `pip3`, есть конфликт с Python2) для установки зависимостей:
 ```
