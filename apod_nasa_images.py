@@ -5,27 +5,27 @@ import argparse
 from dotenv import load_dotenv
 
 
-def apod_nasa_num(num, token):
+def fetch_apod_images(num, token, img_path):
     nasa_url = "https://api.nasa.gov/planetary/apod"
-    path = "images/apod/"
-    os.makedirs(path, exist_ok=True)
-    param = {
+    os.makedirs(img_path, exist_ok=True)
+    params = {
         "api_key": token,
         "count": num,
     }
-    response = requests.get(nasa_url, params=param)
+    response = requests.get(nasa_url, params=params)
     response.raise_for_status()
     nasa_items = response.json()
-    for count,item in enumerate(nasa_items):
-        url = item['url']
-        file_ext = os.path.splitext(url)
-        response_img = requests.get(url)
-        response_img.raise_for_status()
-        filename = "apod_{}{}".format(count, file_ext[1])
-        path_file = os.path.join(path, filename)
+    for count, item in enumerate(nasa_items):
+        apod_url = item['url']
+        split_url = os.path.splitext(apod_url)
+        head_url, ext = split_url
+        img_response = requests.get(apod_url)
+        img_response.raise_for_status()
+        filename = "apod_{}{}".format(count, ext)
+        file_path = os.path.join(img_path, filename)
         try:
-            with open(path_file, 'wb') as img_file:
-                img_file.write(response_img.content)
+            with open(file_path, 'wb') as img_file:
+                img_file.write(img_response.content)
         except FileNotFoundError:
             print("something wrong with local path")
         except HTTPError:
@@ -35,12 +35,13 @@ def apod_nasa_num(num, token):
 def main():
     load_dotenv()
     nasa_token = os.environ.get("NASA_TOKEN")
+    img_path = os.environ.get("APOD_PATH")
     parser = argparse.ArgumentParser()
     parser.add_argument('amount',
-                        help='Required argument')
+                        help='Required image amount')
     args = parser.parse_args()
-    amount = args.amount
-    apod_nasa_num(amount, nasa_token)
+    img_amount = args.amount
+    fetch_apod_images(img_amount, nasa_token, img_path)
 
 
 if __name__ == '__main__':
