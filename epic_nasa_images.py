@@ -17,12 +17,12 @@ def fetch_epic_images(token, img_path):
     for count, item in enumerate(epic_items):
         base_url = "https://api.nasa.gov/EPIC/archive/natural"
         date_time = datetime.fromisoformat(item['date']).strftime('%Y/%m/%d')
-        date_time = date_time.split('/')
-        year, month, day = date_time
+        split_time = date_time.split('/')
+        year, month, day = split_time
         img = item['image']
         img_time = f"{year}/{month}/{day}"
-        epic_url = f"{base_url}/{img_time}/png/{img}.png?api_key={token}"
-        img_response = requests.get(epic_url)
+        epic_url = f"{base_url}/{img_time}/png/{img}.png"
+        img_response = requests.get(epic_url, params=param)
         img_response.raise_for_status()
         filename = "epic_{}.png".format(count)
         file_path = os.path.join(img_path, filename)
