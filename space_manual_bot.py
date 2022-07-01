@@ -15,20 +15,15 @@ def main():
                         help='Required folder path')
     folder_arg = parser.parse_args()
     img = folder_arg.image
-    if img:
-        for root, dirs, files in os.walk("images/"):
-            for file in files:
-                if file==img:
+    for root, dirs, files in os.walk("images/"):
+        for file in files:
+            if img:
+                if file == img:
                     img_root = os.path.join(root, file)
-        bot.send_document(chat_id=chat_id, document=open(img_root, 'rb'))
-    else:
-        img_list = []
-        for root, dirs, files in os.walk("images/"):
-            for file in files:
-                img_root = os.path.join(root, file)
-                img_list.append(img_root)
-        img_path = random.choice(img_list)
-        bot.send_document(chat_id=chat_id, document=open(img_path, 'rb'))
+            else:
+                img_root = os.path.join(root, random.choice(files))
+    with open(img_root, 'rb') as img_file:
+        bot.send_document(chat_id=chat_id, document=img_file)
 
 
 if __name__ == "__main__":
