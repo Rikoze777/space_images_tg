@@ -1,4 +1,5 @@
 import os
+from tkinter import PROJECTING
 import telegram
 import argparse
 from dotenv import load_dotenv
@@ -12,13 +13,13 @@ def main():
     bot = telegram.Bot(token=tg_token)
     parser = argparse.ArgumentParser()
     parser.add_argument('image', nargs='?',
-                        help='Required folder path')
-    folder_arg = parser.parse_args()
-    img = folder_arg.image
+                        help='Required image name')
+    image_args = parser.parse_args()
+    img_name = image_args.image
     for root, dirs, files in os.walk("images/"):
         for file in files:
-            if img:
-                if file == img:
+            if img_name:
+                if file == img_name:
                     img_root = os.path.join(root, file)
             else:
                 img_root = os.path.join(root, random.choice(files))
