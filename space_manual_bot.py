@@ -1,5 +1,4 @@
 import os
-from tkinter import PROJECTING
 import telegram
 import argparse
 from dotenv import load_dotenv
