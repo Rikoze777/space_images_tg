@@ -8,10 +8,10 @@ from datetime import datetime
 def fetch_epic_images(token, img_path):
     epic_url = "https://api.nasa.gov/EPIC/api/natural/images"
     os.makedirs(img_path, exist_ok=True)
-    param = {
+    params = {
         "api_key": token
     }
-    response = requests.get(epic_url, params=param)
+    response = requests.get(epic_url, params=params)
     response.raise_for_status()
     epic_items = response.json()
     for count, item in enumerate(epic_items):
@@ -22,7 +22,7 @@ def fetch_epic_images(token, img_path):
         img = item['image']
         img_time = f"{year}/{month}/{day}"
         epic_url = f"{base_url}/{img_time}/png/{img}.png"
-        img_response = requests.get(epic_url, params=param)
+        img_response = requests.get(epic_url, params=params)
         img_response.raise_for_status()
         filename = "epic_{}.png".format(count)
         file_path = os.path.join(img_path, filename)
